@@ -42,7 +42,7 @@ class FCI_Admin_Menu {
 
 		if ( false === $results ) {
 			global $wpdb;
-			$fci_table_name = $wpdb->prefix . 'fci_link_tracking';
+			$fci_table_name = $wpdb->prefix . FCI_DATABASE_TABLE;
 
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$results = $wpdb->get_results( "SELECT * FROM $fci_table_name ORDER BY created_at DESC" );

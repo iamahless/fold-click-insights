@@ -19,7 +19,7 @@ class FCI_Activator {
 	public static function activate() {
 		global $wpdb;
 
-		$fci_table_name  = $wpdb->prefix . 'fci_link_tracking';
+		$fci_table_name  = $wpdb->prefix . FCI_DATABASE_TABLE;
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$sql = "CREATE TABLE $fci_table_name (

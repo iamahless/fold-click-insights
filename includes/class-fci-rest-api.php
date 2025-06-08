@@ -36,7 +36,7 @@ class FCI_Rest_Api {
 	 */
 	public function track_visit( WP_REST_Request $request ) {
 		global $wpdb;
-		$fci_table_name = $wpdb->prefix . 'fci_link_tracking';
+		$fci_table_name = $wpdb->prefix . FCI_DATABASE_TABLE;
 
 		$headers = $request->get_headers();
 		$params  = $request->get_json_params();

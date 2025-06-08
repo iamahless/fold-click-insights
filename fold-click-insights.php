@@ -18,6 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'FCI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 define( 'FCI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+define( 'FCI_DATABASE_TABLE', 'fci_link_tracking' );
 
 /**
  * Load the required dependencies for the plugin.
