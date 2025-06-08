@@ -5,5 +5,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 global $wpdb;
-$table_name = $wpdb->prefix . 'fci_link_tracking';
-$wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+$fci_table_name = $wpdb->prefix . 'fci_link_tracking';
+// phpcs:ignore WordPress.DB.DirectDatabaseQuery.SchemaChange,WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery
+$wpdb->query( 'DROP TABLE IF EXISTS `' . esc_sql( $fci_table_name ) . '`' );

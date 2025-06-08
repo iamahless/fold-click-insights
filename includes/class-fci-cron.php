@@ -21,13 +21,13 @@ class FCI_Cron {
 	 */
 	public function delete_old_data() {
 		global $wpdb;
-		$table_name     = $wpdb->prefix . 'fci_link_tracking';
+		$fci_table_name = $wpdb->prefix . 'fci_link_tracking';
 		$seven_days_ago = gmdate( 'Y-m-d H:i:s', strtotime( '-7 days' ) );
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.NoCaching,WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM $table_name WHERE created_at < %s",
+				'DELETE FROM `' . esc_sql( $fci_table_name ) . '` WHERE created_at < %s',
 				$seven_days_ago
 			)
 		);

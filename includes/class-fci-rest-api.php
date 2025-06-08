@@ -36,7 +36,7 @@ class FCI_Rest_Api {
 	 */
 	public function track_visit( WP_REST_Request $request ) {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'fci_link_tracking';
+		$fci_table_name = $wpdb->prefix . 'fci_link_tracking';
 
 		$headers = $request->get_headers();
 		$params  = $request->get_json_params();
@@ -49,7 +49,7 @@ class FCI_Rest_Api {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$wpdb->insert(
-			$table_name,
+			$fci_table_name,
 			array(
 				'screen_width'  => intval( $params['screenWidth'] ),
 				'screen_height' => intval( $params['screenHeight'] ),

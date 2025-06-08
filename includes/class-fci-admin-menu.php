@@ -37,15 +37,17 @@ class FCI_Admin_Menu {
 	 * @return void
 	 */
 	public function render_admin_page() {
-		$results = get_transient( 'fci_homepage_visits_data' );
+		$cache_key = 'fci_homepage_visits_data';
+		$results   = wp_cache_get( $cache_key, 'fci' );
+
 		if ( false === $results ) {
 			global $wpdb;
-			$table_name = $wpdb->prefix . 'fci_link_tracking';
+			$fci_table_name = $wpdb->prefix . 'fci_link_tracking';
 
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			$results = $wpdb->get_results( "SELECT * FROM $table_name ORDER BY created_at DESC" );
+			$results = $wpdb->get_results( "SELECT * FROM $fci_table_name ORDER BY created_at DESC" );
 
-			set_transient( 'fci_homepage_visits_data', $results, HOUR_IN_SECONDS );
+			wp_cache_set( $cache_key, $results, 'fci', HOUR_IN_SECONDS );
 		}
 		?>
 		<div class="wrap">
