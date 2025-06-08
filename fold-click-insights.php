@@ -2,14 +2,34 @@
 /**
  * Plugin Name:     FoldClick Insights
  * Plugin URI:      PLUGIN SITE HERE
- * Description:     Nothing
+ * Description:     A plugin to provide insights on fold clicks.
  * Author:          Alexander Garuba
  * Author URI:      https://github.com/iamahless
  * Text Domain:     fold-click-insights
  * Domain Path:     /languages
  * Version:         0.1.0
  *
- * @package         Fold_Click_Insights
+ * @package         fci
  */
 
-// Your code starts here.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+define( 'FCI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
+/**
+ * Load the required dependencies for the plugin.
+ */
+function fci_load_dependencies() {
+	require_once FCI_PLUGIN_PATH . 'includes/class-fci-activator.php';
+}
+
+/**
+ * Initiate the hooks for the plugin.
+ */
+function fci_initiate_hooks() {
+	register_activation_hook( __FILE__, array( 'FCI_Activator', 'activate' ) );
+}
+
+fci_load_dependencies();
+fci_initiate_hooks();
