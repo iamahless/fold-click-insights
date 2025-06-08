@@ -59,10 +59,6 @@ function fci_initiate_hooks() {
 	if ( ! wp_next_scheduled( 'fci_cleanup_database' ) ) {
 		wp_schedule_event( time(), 'daily', 'fci_cleanup_database' );
 	}
-
-	register_activation_hook( __FILE__, array( $cron, 'activate' ) );
-
-	register_deactivation_hook( __FILE__, array( $cron, 'deactivate' ) );
 }
 
 fci_load_dependencies();
