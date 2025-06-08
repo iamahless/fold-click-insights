@@ -30,6 +30,8 @@ function fci_load_dependencies() {
 	require_once FCI_PLUGIN_PATH . 'includes/class-fci-enqueue-scripts.php';
 
 	require_once FCI_PLUGIN_PATH . 'includes/class-fci-rest-api.php';
+
+	require_once FCI_PLUGIN_PATH . 'includes/class-fci-admin-menu.php';
 }
 
 /**
@@ -45,6 +47,9 @@ function fci_initiate_hooks() {
 
 	$rest_api = new FCI_Rest_Api();
 	add_action( 'rest_api_init', array( $rest_api, 'add_api_routes' ) );
+
+	$admin_menu = new FCI_Admin_Menu();
+	add_action( 'admin_menu', array( $admin_menu, 'add_admin_page' ) );
 }
 
 fci_load_dependencies();
