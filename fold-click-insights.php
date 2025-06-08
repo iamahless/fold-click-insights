@@ -32,6 +32,8 @@ function fci_load_dependencies() {
 	require_once FCI_PLUGIN_PATH . 'includes/class-fci-rest-api.php';
 
 	require_once FCI_PLUGIN_PATH . 'includes/class-fci-admin-menu.php';
+
+	require_once FCI_PLUGIN_PATH . 'includes/class-fci-cron.php';
 }
 
 /**
@@ -50,6 +52,17 @@ function fci_initiate_hooks() {
 
 	$admin_menu = new FCI_Admin_Menu();
 	add_action( 'admin_menu', array( $admin_menu, 'add_admin_page' ) );
+
+	$cron = new FCI_Cron();
+	add_action( 'fci_cleanup_database', array( $cron, 'delete_old_data' ) );
+
+	if ( ! wp_next_scheduled( 'fci_cleanup_database' ) ) {
+		wp_schedule_event( time(), 'daily', 'fci_cleanup_database' );
+	}
+
+	register_activation_hook( __FILE__, array( $cron, 'activate' ) );
+
+	register_deactivation_hook( __FILE__, array( $cron, 'deactivate' ) );
 }
 
 fci_load_dependencies();
