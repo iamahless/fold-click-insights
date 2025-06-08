@@ -22,6 +22,8 @@ define( 'FCI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
  */
 function fci_load_dependencies() {
 	require_once FCI_PLUGIN_PATH . 'includes/class-fci-activator.php';
+
+	require_once FCI_PLUGIN_PATH . 'includes/class-fci-deactivator.php';
 }
 
 /**
@@ -29,6 +31,8 @@ function fci_load_dependencies() {
  */
 function fci_initiate_hooks() {
 	register_activation_hook( __FILE__, array( 'FCI_Activator', 'activate' ) );
+
+	register_deactivation_hook( __FILE__, array( 'FCI_Deactivator', 'deactivate' ) );
 }
 
 fci_load_dependencies();
