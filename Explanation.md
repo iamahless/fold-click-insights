@@ -4,7 +4,7 @@
 Website owners, particularly those managing content-rich homepages, face a challenge: they don't know which of their navigation links or calls-to-action are immediately visible to visitors without scrolling. This "above the fold" area is prime digital real estate. Understanding which links are seen by the majority of users upon landing on the homepage is critical for optimizing user experience and conversion rates. The goal is to provide website owners with clear, actionable data on which hyperlinks are visible within the initial viewport for every visit to their homepage over the last week.
 
 ### **Technical Specification of the Design**
-The plugin is an integrated solution that works within the WordPress ecosystem to collect, store, display, and manage hyperlink visibility data.
+The **FoldClick Insights** plugin is an integrated solution that works within the WordPress ecosystem to collect, store, display, and manage hyperlink visibility data.
 
 #### **How It Works**
 The process can be broken down into five core components:
@@ -20,15 +20,15 @@ The process can be broken down into five core components:
     -   It is sent asynchronously via a `POST` request to a custom WordPress REST API endpoint: `/wp-json/foldclick-insights/v1/track`.
     -   A WordPress nonce is included in the request headers to provide a basic layer of security against Cross-Site Request Forgery (CSRF) attacks.
 3.  **Data Storage (Backend - Custom Database Table)**:
-    -   The REST API endpoint is handled by a dedicated PHP class (`FCI_Rest_Api`).
-    -   Upon receiving the data, the endpoint sanitizes the inputs and inserts a new record into a custom database table named `wp_foldclick_insights`.
-    -   This table is created upon plugin activation and has columns for an ID, created_at timestamp, screen width, screen height, and a `TEXT` column to store the JSON-encoded array of visible hyperlinks.
+    -   The REST API endpoint is handled by a dedicated PHP class (`RestApi`).
+    -   Upon receiving the data, the endpoint sanitizes the inputs and inserts a new record into a custom database table named `wp_fci_link_tracking`.
+    -   This table is created upon plugin activation and has columns for an ID, created_at timestamp, screen width, screen height, and a `TEXT` column to store the JSON-encoded array of links.
 4.  **Data Display (Backend - Admin Page)**:
-    -   A new page, "FoldClick Insights," is added to the WordPress admin menu (`FCI_Admin_Menu`).
+    -   A new page, "FoldClick Insights," is added to the WordPress admin menu (`AdminMenu`).
     -   When an admin visits this page, the plugin queries the `wp_fci_link_tracking` table for all records from the last seven days.
-    -   The data is presented in a clear, tabular format, showing the created at, the visitor's screen size, and a list of the hyperlinks that were visible above the fold for that specific visit.
+    -   The data is presented in a clear, tabular format, showing the visit time, the visitor's screen size, and a list of the hyperlinks that were visible above the fold for that specific visit.
 5.  **Data Maintenance (WP-Cron)**:
-    -   To prevent indefinite database growth, a scheduled event (`wp_cron`) is registered (`FCI_Cron`).
+    -   To prevent indefinite database growth, a scheduled event (`wp_cron`) is registered (`Cron`).
     -   This cron job runs once daily. Its sole purpose is to execute a `DELETE` query on the `wp_fci_link_tracking` table, removing any records that are older than seven days. This ensures the data is always fresh and relevant, as per the user story.
 
 ### **Technical Decisions and Rationale**
@@ -49,7 +49,7 @@ Several key decisions were made during the plugin's design to ensure it is moder
     -   **Decision**: The plugin strictly avoids creating new global variables.
     -   **Why**: Globals are a bad practice in WordPress as they pollute the global namespace and can lead to conflicts with other plugins or themes. All data is passed as parameters or managed within class instances.
 
-### **How the Solution Achieves the Admin's Desired Outcome**
+## **How the Solution Achieves the Admin's Desired Outcome**
 The **FoldClick Insights** plugin directly fulfills the website owner's user story: _"As a website owner, I want to know which hyperlinks were seen above the fold when someone opened my homepage over the past 7 days so that I can optimize the layout based on recent visits."_
 -   **"Know which hyperlinks were seen above the fold..."**: The JavaScript tracker accurately identifies only the links visible in the initial viewport. This data is the core of what the plugin collects.
 -   **"...when someone opened my homepage..."**: The tracking script is specifically enqueued to load _only_ on the homepage (`is_front_page()`), ensuring data is collected from the correct location.
