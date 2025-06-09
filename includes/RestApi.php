@@ -1,5 +1,10 @@
 <?php
 
+namespace FCI;
+
+use WP_REST_Request;
+use WP_REST_Response;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -10,7 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package FoldClickInsights
  */
-class FCI_Rest_Api {
+class RestApi {
+	/**
+	 * Constructor to initialize the REST API routes.
+	 */
+	public function register_routes() {
+		add_action( 'rest_api_init', array( $this, 'add_api_routes' ) );
+	}
 	/**
 	 * Register the REST API routes for the plugin.
 	 *

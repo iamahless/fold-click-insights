@@ -16,51 +16,72 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FCI_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-define( 'FCI_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
 define( 'FCI_DATABASE_TABLE', 'fci_link_tracking' );
 
 /**
- * Load the required dependencies for the plugin.
+ * PSR-4 Autoloader.
+ *
+ * Dynamically loads classes as they are needed.
+ *
+ * @param string $class_name The fully-qualified class name.
  */
-function fci_load_dependencies() {
-	require_once FCI_PLUGIN_PATH . 'includes/class-fci-activator.php';
+spl_autoload_register(
+	function ( $class_name ) {
+		$prefix   = 'FCI\\';
+		$base_dir = __DIR__ . '/includes/';
 
-	require_once FCI_PLUGIN_PATH . 'includes/class-fci-deactivator.php';
+		$len = strlen( $prefix );
+		if ( strncmp( $prefix, $class_name, $len ) !== 0 ) {
+			return;
+		}
 
-	require_once FCI_PLUGIN_PATH . 'includes/class-fci-enqueue-scripts.php';
+		$relative_class = substr( $class_name, $len );
+		$file           = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
 
-	require_once FCI_PLUGIN_PATH . 'includes/class-fci-rest-api.php';
+		if ( file_exists( $file ) ) {
+			require $file;
+		}
+	}
+);
 
-	require_once FCI_PLUGIN_PATH . 'includes/class-fci-admin-menu.php';
+/**
+ * The main function to run the plugin.
+ */
+function fci_run_foldclick_insights() {
+	register_activation_hook( __FILE__, array( 'FCI\Activator', 'activate' ) );
+	register_deactivation_hook( __FILE__, array( 'FCI\Deactivator', 'deactivate' ) );
 
-	require_once FCI_PLUGIN_PATH . 'includes/class-fci-cron.php';
+	$rest_api = new FCI\RestApi();
+	$rest_api->register_routes();
+
+	new FCI\AdminMenu();
+	new FCI\Cron();
+
+	add_action( 'wp_enqueue_scripts', 'fci_enqueue_scripts' );
 }
 
 /**
- * Initiate the hooks for the plugin.
+ * Enqueues the tracking script on the front page.
  */
-function fci_initiate_hooks() {
-	register_activation_hook( __FILE__, array( 'FCI_Activator', 'activate' ) );
+function fci_enqueue_scripts() {
+	if ( is_front_page() ) {
+		wp_enqueue_script(
+			'fci-tracker',
+			plugin_dir_url( __FILE__ ) . 'assets/js/tracker.js',
+			array(),
+			'1.0.0',
+			true
+		);
 
-	register_deactivation_hook( __FILE__, array( 'FCI_Deactivator', 'deactivate' ) );
-
-	$enqueue_scripts = new FCI_Enqueue_Scripts();
-	add_action( 'wp_enqueue_scripts', array( $enqueue_scripts, 'load_scripts' ) );
-
-	$rest_api = new FCI_Rest_Api();
-	add_action( 'rest_api_init', array( $rest_api, 'add_api_routes' ) );
-
-	$admin_menu = new FCI_Admin_Menu();
-	add_action( 'admin_menu', array( $admin_menu, 'add_admin_page' ) );
-
-	$cron = new FCI_Cron();
-	add_action( 'fci_cleanup_database', array( $cron, 'delete_old_data' ) );
-
-	if ( ! wp_next_scheduled( 'fci_cleanup_database' ) ) {
-		wp_schedule_event( time(), 'daily', 'fci_cleanup_database' );
+		wp_localize_script(
+			'fci-tracker',
+			'fci_data',
+			array(
+				'rest_url' => esc_url_raw( rest_url( 'foldclick-insights/v1/track' ) ),
+				'nonce'    => wp_create_nonce( 'wp_rest' ),
+			)
+		);
 	}
 }
 
-fci_load_dependencies();
-fci_initiate_hooks();
+fci_run_foldclick_insights();

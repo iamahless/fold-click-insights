@@ -1,5 +1,7 @@
 <?php
 
+namespace FCI;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -11,7 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package FoldClickInsights
  */
-class FCI_Admin_Menu {
+class AdminMenu {
+	/**
+	 * Constructor to initialize the admin menu.
+	 *
+	 * This function hooks into the 'admin_menu' action to add the admin page.
+	 */
+	public function __construct() {
+		add_action( 'admin_menu', array( $this, 'add_admin_page' ) );
+	}
+
 	/**
 	 * Add the admin page to the WordPress admin menu.
 	 *

@@ -1,5 +1,7 @@
 <?php
 
+namespace FCI;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -10,7 +12,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package FoldClickInsights
  */
-class FCI_Cron {
+class Cron {
+	/**
+	 * Constructor to initialize the cron job.
+	 *
+	 * This constructor sets up a daily scheduled event to clean up old data
+	 * from the database.
+	 */
+	public function __construct() {
+		add_action( 'fci_daily_cleanup', array( $this, 'delete_old_data' ) );
+
+		if ( ! wp_next_scheduled( 'fci_daily_cleanup' ) ) {
+			wp_schedule_event( time(), 'daily', 'fci_daily_cleanup' );
+		}
+	}
+
 	/**
 	 * Deletes old data from the database.
 	 *

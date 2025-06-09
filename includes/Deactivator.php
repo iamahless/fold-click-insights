@@ -1,5 +1,7 @@
 <?php
 
+namespace FCI;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -12,11 +14,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package FoldClickInsights
  */
-class FCI_Deactivator {
+class Deactivator {
 	/**
 	 * Deactivate the plugin and clear scheduled hooks.
 	 */
 	public static function deactivate() {
-		wp_clear_scheduled_hook( 'fci_cleanup_database' );
+		wp_clear_scheduled_hook( 'fci_daily_cleanup' );
 	}
 }

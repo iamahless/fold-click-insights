@@ -1,5 +1,7 @@
 <?php
 
+namespace FCI;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -12,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @package FoldClickInsights
  */
-class FCI_Activator {
+class Activator {
 	/**
 	 * Activate the plugin and create the necessary database table.
 	 */
