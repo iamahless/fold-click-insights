@@ -3,8 +3,7 @@ name: PHP CodeSniffer lint
 on:
   pull_request:
     branches:
-      - master
-      - develop
+      - main
 jobs:
   run:
     runs-on: ${{ matrix.operating-system }}
