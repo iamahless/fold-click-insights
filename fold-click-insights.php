@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name:     FoldClick Insights
- * Plugin URI:      PLUGIN SITE HERE
+ * Plugin URI:      https://github.com/iamahless/fold-click-insights
  * Description:     A plugin to provide insights on fold clicks.
  * Author:          Alexander Garuba
  * Author URI:      https://github.com/iamahless
