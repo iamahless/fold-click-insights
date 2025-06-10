@@ -24,6 +24,11 @@
     "phpcs-changed": "./bin/phpcs-changed.sh",
     "phpcs:fix": "phpcbf"
   },
+  "autoload": {
+    "psr-4": {
+      "FCI\\LinkTracker\\": "src/"
+    }
+  },
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true

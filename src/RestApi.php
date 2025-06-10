@@ -1,6 +1,6 @@
 <?php
 
-namespace FCI;
+namespace FCI\LinkTracker;
 
 use WP_REST_Request;
 use WP_REST_Response;

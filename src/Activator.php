@@ -1,6 +1,6 @@
 <?php
 
-namespace FCI;
+namespace FCI\LinkTracker;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

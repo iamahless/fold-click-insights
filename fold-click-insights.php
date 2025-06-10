@@ -18,44 +18,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'FCI_DATABASE_TABLE', 'fci_link_tracking' );
 
-/**
- * PSR-4 Autoloader.
- *
- * Dynamically loads classes as they are needed.
- *
- * @param string $class_name The fully-qualified class name.
- */
-spl_autoload_register(
-	function ( $class_name ) {
-		$prefix   = 'FCI\\';
-		$base_dir = __DIR__ . '/includes/';
-
-		$len = strlen( $prefix );
-		if ( strncmp( $prefix, $class_name, $len ) !== 0 ) {
-			return;
-		}
-
-		$relative_class = substr( $class_name, $len );
-		$file           = $base_dir . str_replace( '\\', '/', $relative_class ) . '.php';
-
-		if ( file_exists( $file ) ) {
-			require $file;
-		}
-	}
-);
+require_once plugin_dir_path( __FILE__ ) . 'vendor/autoload.php';
 
 /**
  * The main function to run the plugin.
  */
 function fci_run_foldclick_insights() {
-	register_activation_hook( __FILE__, array( 'FCI\Activator', 'activate' ) );
-	register_deactivation_hook( __FILE__, array( 'FCI\Deactivator', 'deactivate' ) );
+	register_activation_hook( __FILE__, array( FCI\LinkTracker\Activator::class, 'activate' ) );
+	register_deactivation_hook( __FILE__, array( FCI\LinkTracker\Deactivator::class, 'deactivate' ) );
 
-	$rest_api = new FCI\RestApi();
+	$rest_api = new FCI\LinkTracker\RestApi();
 	$rest_api->register_routes();
 
-	new FCI\AdminMenu();
-	new FCI\Cron();
+	new FCI\LinkTracker\AdminMenu();
+	new FCI\LinkTracker\Cron();
 
 	add_action( 'wp_enqueue_scripts', 'fci_enqueue_scripts' );
 }
